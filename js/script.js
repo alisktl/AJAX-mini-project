@@ -42,6 +42,11 @@ function loadData() {
     // Wikipedia AJAX request goes here
     var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + cityStr + '&format=json&callback=wikiCallback';
 
+    // TimeoutRequest, to detect unsuccessful ajax request after 8000 milliseconds
+    var wikiRequestTimeout = setTimeout(function(){
+        $wikiElem.text("failed to get wikipedia resources");
+    }, 8000);
+
     $.ajax({
         url: wikiUrl,
         dataType: "jsonp",
@@ -54,6 +59,9 @@ function loadData() {
                 var url = 'http://en.wikipedia.org/wiki/' + articleStr;
                 $wikiElem.append('<li<a href="' + url + '">' + articleStr + '</a></li>');
             };
+
+            // If success, clear Timeout
+            clearTimeout(wikiRequestTimeout);
         }
     });
 
